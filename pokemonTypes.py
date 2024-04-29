@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 pd.set_option("display.max_rows", None)
 poke = pd.read_csv("Pokemon2.csv")
@@ -7,7 +8,8 @@ allTypes = [
     "Fighting", "Poison", "Ground", "Flying", "Bug", "Dark",
     "Rock", "Ghost", "Dragon", "Psychic", "Steel", "Fairy"
 ]
-types = []
+categories = ("Total","HP","Attack","Defense","Sp. Atk","Sp. Def","Speed","Generation")
+types = [np.nan]
 
 x = "."
 while x != "":
@@ -21,23 +23,42 @@ while x != "":
 poke = poke[poke["Type1"].isin(types)]
 poke = poke[poke["Type2"].isin(types)]
 
+while True:
 
-x = input("vill du sortera efter något annat?\n")
-y = int(input(""))
-z = input("större eller mindre?")
+    x = input(f"vill du sortera efter något annat?\n det går att sortera efter {categories}\n")
 
-if x in {"Total","HP","Attack","Defense","Sp. Atk","Sp. Def","Speed","Generation"}:
+    if x == "":
+        break
 
-    if z == "större":
-        poke = poke[poke[x] > y]
+    try:
+        x = int(x)
+        x = categories[x-1]
+    except:
+        pass
 
-    elif z == "mindre":
-        poke = poke[poke[x] < y]
     
-    else:
-        poke = poke[poke[x] == y]
-    
+    if x in categories:
+
+        y = input("med hur mycket?")
+        while type(y) != int:
+            try:
+                y = int(y)
+            except:
+                y = input("ange ett nummer!!!!!\n")
 
 
+        z = input("större eller mindre?").strip
 
-print(poke)
+        if z == "större":
+            poke = poke[poke[x] >= y]
+
+        elif z == "mindre":
+            poke = poke[poke[x] <= y]
+        
+        else:
+            poke = poke[poke[x] == y]
+
+if poke.empty == True:
+    print("tyvärr fanns det inga som passade dom kriterierna")
+else:
+    print(f"detta var alla pokemons som passar in med dina krav\n{poke}")
